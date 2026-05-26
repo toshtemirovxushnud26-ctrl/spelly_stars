@@ -329,7 +329,7 @@ def kb_payment(order_id, card, amount):
                               copy_text=CopyTextButton(text=str(amount)))],
         [InlineKeyboardButton(text="✅ To'lov qildim",
                               callback_data=f"check_pay:{order_id}")],
-        [InlineKeyboardButton(text="❌ Bekor qilish",
+        [InlineKeyboardButton(text=" Bekor qilish",
                               callback_data=f"cancel_pay:{order_id}")],
     ])
 
@@ -359,7 +359,7 @@ def kb_admin_premium(packages):
 
 
 def kb_admin_channels(channels):
-    rows = [[InlineKeyboardButton(text=f"❌ {ch['title']}", callback_data=f"del_channel:{ch['id']}")]
+    rows = [[InlineKeyboardButton(text=f" {ch['title']}", callback_data=f"del_channel:{ch['id']}")]
             for ch in channels]
     rows.append([InlineKeyboardButton(text="➕ Kanal qo'shish", callback_data="add_channel")])
     rows.append([InlineKeyboardButton(text="🔙 Admin panel", callback_data="admin_back")])
@@ -406,7 +406,7 @@ async def cmd_cancel(msg: Message, state: FSMContext):
     if cur is None:
         await msg.answer("Bekor qilinadigan narsa yo'q. /start bosing.")
     else:
-        await msg.answer("❌ Bekor qilindi. /start bosing.")
+        await msg.answer("Bekor qilindi. /start bosing.")
 
 
 # ─── /start ──────────────────────────────────────────────────
@@ -522,7 +522,7 @@ async def _start_stars_pay(msg_obj, uid, stars, price, state):
     res = await humo_create(uid, price)
     if not res or not res.get("ok"):
         err = res.get("error", "Server xatosi") if res else "Javob yo'q"
-        await wait.edit_text(f"❌ <b>Xato:</b> {err}", parse_mode="HTML")
+        await wait.edit_text(f" <b>Xato:</b> {err}", parse_mode="HTML")
         await state.clear()
         return
     d = res["data"]
@@ -581,7 +581,7 @@ async def premium_buy(call: CallbackQuery, state: FSMContext, bot: Bot):
     res = await humo_create(call.from_user.id, p["price"])
     if not res or not res.get("ok"):
         err = res.get("error", "Server xatosi") if res else "Javob yo'q"
-        await wait.edit_text(f"❌ <b>Xato:</b> {err}", parse_mode="HTML")
+        await wait.edit_text(f" <b>Xato:</b> {err}", parse_mode="HTML")
         await call.answer()
         return
     d = res["data"]
@@ -664,7 +664,7 @@ async def cancel_pay(call: CallbackQuery, state: FSMContext):
     oid = int(call.data.split(":")[1])
     await update_order_status(oid, "cancelled")
     await state.clear()
-    await call.message.edit_text("❌ To'lov bekor qilindi.")
+    await call.message.edit_text(" To'lov bekor qilindi.")
 
 
 @r_shop.message(F.text == "📦 Mening buyurtmalarim")
@@ -858,8 +858,8 @@ async def bot_settings(msg: Message):
     stars_on = (await get_setting("stars_enabled", "1")) == "1"
     premium_on = (await get_setting("premium_enabled", "1")) == "1"
     welcome = await get_setting("welcome_text", "Xush kelibsiz!")
-    sts = "✅ Yoqiq" if stars_on else "❌ O'chiq"
-    pts = "✅ Yoqiq" if premium_on else "❌ O'chiq"
+    sts = "✅ Yoqiq" if stars_on else " O'chiq"
+    pts = "✅ Yoqiq" if premium_on else " O'chiq"
     await msg.answer(
         f"⚙️ <b>Bot sozlamalari</b>\n\n⭐ Stars: {sts}\n💎 Premium: {pts}\n\n"
         f"📝 Xush kelish matni:\n<i>{welcome}</i>",
@@ -923,7 +923,7 @@ async def paystars_bal(msg: Message):
         bal = res.get("balance", res.get("data", {}).get("balance", "N/A"))
         await msg.answer(f"💰 <b>PayStars balansi:</b> <code>{bal}</code>", parse_mode="HTML")
     else:
-        await msg.answer(f"❌ Xato: {res.get('error', 'Noma\\'lum')}")
+        await msg.answer(f" Xato: {res.get('error', 'Noma\\'lum')}")
 
 
 # ═══════════════════════════════════════════════════════════════
